@@ -18,7 +18,7 @@
 
 		var player1Score = 0;
 		var player2Score = 0;
-		const WINNING_SCORE = 1;
+		const WINNING_SCORE = 7;
 
 		var showingWinScreen = false;
 
@@ -40,12 +40,16 @@ function calculateMousePos(evt) {
 						y:mouseY
 		};
 }
-		// evt means event
+		
 function handleMouseClick(evt) {
 				if(showingWinScreen) {
 							player1Score = 0;
 							player2Score = 0;
 						showingWinScreen = false;
+                bMusic.play();
+              bMusic.loop = true;
+
+          
 				}
 }
 
@@ -59,6 +63,7 @@ window.onload = function() {
 				 	drawEverything();
 			}, 1000/framesPerSecond);
           
+      bMusic.loop = true;
       bMusic.play();    
   
 			canvas.addEventListener('mousedown',handleMouseClick);
@@ -71,11 +76,17 @@ window.onload = function() {
 }
 
 function ballReset(){
-// || means or else (means either statement can be true to activates whats in side) && means and also (means that both scores would have to exceeed the WINNING_SCORE for this to happening)
+
 			if(player1Score >= WINNING_SCORE ||
 				 player2Score >= WINNING_SCORE) {
                     
 										showingWinScreen = true;
+                    bMusic.pause();  
+                    bMusic.currentTime=0;    
+
+
+       
+        
 			}
 			ballSpeedX = -ballSpeedX;
 			ballX = canvas.width/2;
@@ -94,10 +105,11 @@ function computerMovement() {
 
 function moveEverything() {
 		if(showingWinScreen) {  
-							return;
+      	return;
+      
 	}
 			computerMovement();
-//ballX += ballSpeedX; = ballX = ballX + ballSpeedX
+
 			ballX += ballSpeedX;
 			ballY += ballSpeedY;
 
@@ -110,8 +122,8 @@ function moveEverything() {
 											-(paddle1Y+PADDLE_HEIGHT/2);
 					ballSpeedY = deltaY * 0.35;
 			} else{
-				//++ = player2Score += 1
-						player2Score ++; // must be before ballReset();
+				
+						player2Score ++; 
 						ballReset();
 
 			}
@@ -125,8 +137,8 @@ function moveEverything() {
 											-(paddle2Y+PADDLE_HEIGHT/2);
 					ballSpeedY = deltaY * 0.35;
 			} else{
-				//++ = player1Score += 1
-				 		player1Score ++; // must be before ballReset();
+				
+				 		player1Score ++;
 						ballReset();
 
 			}
@@ -149,7 +161,7 @@ function drawNet() {
 
 function drawEverything() {
 
-// turns screen black
+
     	  var img = document.getElementById("Jamaica");
     canvasContext.drawImage(img,0,0,800,600);
 
@@ -162,36 +174,35 @@ function drawEverything() {
 
 				if(player1Score >= WINNING_SCORE) {
           canvasContext.fillStyle = '#1e6b03';
-					canvasContext.fillText("Left Player Won!", 350,200);
-          canvasContext.font = '16px verdana';
+					canvasContext.fillText("Left Player Won!", 330,200);
+          canvasContext.font = 'bolder 20px verdana';
 
 			} else if (player2Score >= WINNING_SCORE) {
                   canvasContext.fillStyle = '#1e6b03';
-                  canvasContext.font = '16px verdana';
+                  canvasContext.font = 'bolder 20px verdana';
 
-					canvasContext.fillText("Right Player Won!", 350,200);
+					canvasContext.fillText("Right Player Won!", 330,200);
 				}
                   canvasContext.fillStyle = '#86f4a5';
-                  canvasContext.font = '16px verdana';
-				canvasContext.fillText("click to continue", 350,500);
+                  canvasContext.font = 'bolder 20px verdana';
+				canvasContext.fillText("Click To Continue", 330,500);
 							return;
 	}
 
 	   drawNet();
 
-	//left player paddle
+	
 			colorRect(0,paddle1Y,PADDLE_THICKNESS,PADDLE_HEIGHT,'#f44242');
 
-	//right computer paddle
+	
 			colorRect(canvas.width-PADDLE_THICKNESS,paddle2Y,PADDLE_THICKNESS,PADDLE_HEIGHT,'#f44242');
 
-	//next line draw the ball
 			colorCircle(ballX, ballY, 10, '#f44242');
 
-	//score
+	
 			canvasContext.fillText(player1Score, 100,100);
 			canvasContext.fillText(player2Score, canvas.width-100,100);
-      canvasContext.font = '20px verdana';
+      canvasContext.font = 'bolder 20px verdana';
 }
 function colorCircle(centerX, centerY, radius, drawColor) {
 			canvasContext.fillStyle = drawColor;
